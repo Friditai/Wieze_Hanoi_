@@ -44,9 +44,28 @@ col = Palette()
 while True:
 
 
+     #obsługa kursora
+     pozycja_kursora = pygame.mouse.get_pos()
+     klik_mysz = pygame.mouse.get_pressed()
+     print(pozycja_kursora)
+     print(klik_mysz)
+     if klik_mysz == (1, 0, 0):
+         print("klik")
+         if  480<pozycja_kursora[1]<729:
+            if 217<pozycja_kursora[0]<413: #wieża1
+                #kontur = pygame.draw.rect(tlo, col.BLACK, pygame.Rect(217, 480, 200, 240), 10)
+                print("wieza 1")
+            elif 528<pozycja_kursora[0]<728: #wieża2
+                print("wieza 2")
+            elif 836<pozycja_kursora[0]<1036: #wieża3
+                print("wieza 3")
+
      for event in pygame.event.get():
          if event.type == pygame.QUIT:
              sys.exit(0)
+         if klik_mysz == True:
+             print("klik")
+
            #kolor tla
         #GAME_SURFACE.fill(col.GREEN)
      tlo = pygame.image.load("tlo1m.png").convert()
@@ -76,6 +95,9 @@ while True:
      krazek3A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(260, 633, 115, 17))
      krazek4A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(270, 616, 95, 17))
      krazek5A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(280, 599, 75, 17))
+
+     #sterowanie
+
 
 
 
