@@ -354,14 +354,23 @@ while True:
                  # wieża1
                  if 480 < clics[index_clics][1] < 729 and 217 < clics[index_clics][0] < 413:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
                      z_a = True
+                     z_b = False
+                     z_c = False
+                     print("z_a = ", z_a)
 
                      # wieża2
                  elif 480 < clics[index_clics][1] < 729 and 528 < clics[index_clics][0] < 728:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
                      z_b = True
+                     z_a = False
+                     z_c = False
+                     print("z_b = ", z_b)
 
                      # wieża3
                  elif 480 < clics[index_clics][1] < 729 and 836 < clics[index_clics][0] < 1036:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
                      z_c = True
+                     z_a = False
+                     z_b = False
+                     print("z_c = ", z_c)
 
              else:  # dla elementów zagnieżdżonej listy "clics" o indeksach nieparzystych, reprezentujących pozycję myszy po kliknięciu
                  klikniecie = "poloz"  # w celu położenia klocka na wieżę
@@ -370,14 +379,40 @@ while True:
                  # wieża1
                  if 480 < clics[index_clics][1] < 729 and 217 < clics[index_clics][0] < 413:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
                      na_a = True
+                     na_b = False
+                     na_c = False
+                     print("na_a = ", na_a)
 
                      # wieża2
                  elif 480 < clics[index_clics][1] < 729 and 528 < clics[index_clics][0] < 728:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
                      na_b = True
+                     na_a = False
+                     na_c = False
+                     print("na_b = ", na_b)
 
                      # wieża3
                  elif 480 < clics[index_clics][1] < 729 and 836 < clics[index_clics][0] < 1036:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
                      na_c = True
+                     na_a = False
+                     na_b = False
+                     print("na_c = ", na_c)
+
+
+             if z_a == True and na_b == True:
+                print("Przelozenie ab")
+             elif z_a == True and na_c == True:
+                print("Przełożenie ac")
+             elif z_b == True and na_a == True:
+                 print("Przelozenie ba")
+             elif z_b == True and na_c == True:
+                 print("Przelozenie bc")
+             elif z_c == True and na_a == True:
+                 print("Przelozenie ca")
+             elif z_c == True and na_b == True:
+                 print("Przelozenie cb")
+             else:
+                 continue
+
 
      #sterowanie
      for event in pygame.event.get():
