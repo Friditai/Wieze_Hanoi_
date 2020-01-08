@@ -50,6 +50,9 @@ class Napisy:
         rend = czcionka.render(tekst, 1, kolor)
         tlo.blit(rend, (x, y))
 
+#class Obsluga_myszy:
+
+
 '''class Przyciski:
     def dodaj_przycisk(self, ekran, kolor_tla, kolor_tekstu, tekst, x, y, szer, wys):
         przycisk = pygame.draw.rect(ekran, kolor_tla, pygame.Rect(x, y, szer, wys))
@@ -194,24 +197,75 @@ nap = Napisy()
 
 #obiekt klasy Wyswietl_menu
 #menu = Wyswietl_menu()
+#słownik przypisujący do nr klocka jego długość
+dictA = {5:75, 4:95, 3:115, 2:135, 1:155}
+#pA to lista odpowiadająca klockom na wieży a
+pA = [155, 135, 115, 95, 75]
+pB = []
+pC = []
+dysk = min(pA)
+poziom = 1
+ruch = []
+wszystkie_ruchy = []
+przechowalnia = []
+z_a = False
+z_b = False
+z_c = False
+na_a = False
+na_b = False
+na_c = False
+clics = []
 
+'''if len(clics)!=0:
+    for index_clicks in range(len(clics)):
+        if index_clics % 2 ==0: #dla elementów zagnieżdżonej listy "clics" o indeksach parzystych, reprezentujących pozycję myszy po kliknięciu
+            klikniecie = "podnies"   #w celu podniesienia klocka z wieży
+            print("Kliknięcie w pętli 1: ", klikniecie)
+
+                #wieża1
+            if 480 < clicks[index_clicks][1] < 729 and 217 < clicks[index_clicks][0] < 413: #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
+                z_a = True
+
+                #wieża2
+            elif 480 < clicks[index_clicks][1] < 729 and 528 < clicks[index_clicks][0] < 728: #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
+                z_b = True
+
+                #wieża3
+            elif 480 < clicks[index_clicks][1] < 729 and 836 < clicks[index_clicks][0] < 1036: #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
+                z_c = True
+
+        else: #dla elementów zagnieżdżonej listy "clics" o indeksach nieparzystych, reprezentujących pozycję myszy po kliknięciu
+            klikniecie = "poloz"  #w celu położenia klocka na wieżę
+            print("Kliknięcie w pętli 2: ", klikniecie)
+
+            # wieża1
+            if 480 < clicks[index_clicks][1] < 729 and 217 < clicks[index_clicks][0] < 413:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
+                na_a = True
+
+                # wieża2
+            elif 480 < clicks[index_clicks][1] < 729 and 528 < clicks[index_clicks][0] < 728:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
+                na_b = True
+
+                # wieża3
+            elif 480 < clicks[index_clicks][1] < 729 and 836 < clicks[index_clicks][0] < 1036:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
+                na_c = True'''
+
+'''if a == True and b == True:
+    if
+    przelozenie = "ab"
+    przelozenie = "ba"
+if a == True and c == True:
+    przelozenie = "ac"
+    przelozenie = "ca"
+if b == True and c == True:
+    przelozenie = "bc"
+    przelozenie = "cb"'''
 
 while True:
 
      #screen1 = pygame.display.get_surface()
      #aktualny_ekran = "menu"
      #menu.wyswietl()
-
-     #słownik przypisujący do nr klocka jego długość
-     dictA = {5:75, 4:95, 3:115, 2:135, 1:155}
-     #pA to lista odpowiadająca klockom na wieży a
-     pA = [155, 135, 115, 95, 75]
-     pB = []
-     pC = []
-     dysk = min(pA)
-     poziom = 1
-
-
 
         #kolor tla
         #GAME_SURFACE.fill(col.GREEN)
@@ -220,21 +274,19 @@ while True:
         #pobieramy informacje o ekranie - tle
      screen = pygame.display.get_surface()
 
+#napisy
      nap.napisz("Kliknij lewy przycisk myszy nad wieżą, z której chcesz przenieść klocek", col.GREY3, 141, 15, 12)
      nap.napisz("Kliknij prawy przycisk myszy nad więżą, na którą chcesz przenieść klocek", col.GREY3, 141, 40, 12)
      nap.napisz("31", col.WHITE, 590, 30, 72)
      nap.napisz("Menu główne", col.WHITE, 11, 11, 16)
 
-
-
-
-#narysowanie wież i ich podstaw
+#narysowanie wież i ich podstaw oraz zmiana ich koloru (podświetlenie) po najechaniu na nie myszką
      pozycja_kursora = pygame.mouse.get_pos()
      #print(pozycja_kursora)
 
      if 217 < pozycja_kursora[0] < 413 and 480 < pozycja_kursora[1] < 729:
 
-         wieza1_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(310, 500, 15, 170))
+         wieza1_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(310, 500, 15, 170)) #podświetlona wieża1
          podstawa1_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(290, 670, 55, 10))
          wieza2 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(620, 500, 15, 170))
          podstawa2 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(600, 670, 55, 10))
@@ -243,7 +295,7 @@ while True:
 
      elif 528 < pozycja_kursora[0] < 728 and 480 < pozycja_kursora[1] < 729:
 
-         wieza2_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(620, 500, 15, 170))
+         wieza2_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(620, 500, 15, 170)) #podświetlona wieża2
          podstawa2_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(600, 670, 55, 10))
          wieza1 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(310, 500, 15, 170))
          podstawa1 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(290, 670, 55, 10))
@@ -252,7 +304,7 @@ while True:
 
      elif 836 < pozycja_kursora[0] < 1036 and 480 < pozycja_kursora[1] < 729:
 
-         wieza3_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(930, 500, 15, 170))
+         wieza3_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(930, 500, 15, 170)) #podświetlona wieża3
          podstawa3_podswietlenie = pygame.draw.rect(tlo, col.LIGHTBROWN, pygame.Rect(910, 670, 55, 10))
          wieza1 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(310, 500, 15, 170))
          podstawa1 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(290, 670, 55, 10))
@@ -261,7 +313,7 @@ while True:
 
      else:
 
-         wieza1 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(310, 500, 15, 170))
+         wieza1 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(310, 500, 15, 170))        #wszystkie wieże bez podświetlenia
          podstawa1 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(290, 670, 55, 10))
          wieza2 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(620, 500, 15, 170))
          podstawa2 = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(600, 670, 55, 10))
@@ -271,12 +323,9 @@ while True:
      # krążki na 1 wieży
 
      '''krazek = [1,2,3,4,5]
-     
-
      for key, value in dictA.items():
 
         krazek[key-1] = Narysuj_krazek(key,value,1)'''
-
 
      krazek1 = Narysuj_krazek(col.GREY1, 1, 155, 1)
      krazek2 = Narysuj_krazek(col.GREY2, 2, 135, 1)
@@ -289,128 +338,167 @@ while True:
 
      #poczatkowe.rysujplansze()
 
-
-
-
-
      # krążki na 1 wieży - stan początkowy
-
      #krazek1A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(240, 667, 155, 17))
      #krazek2A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(250, 650, 135, 17))
      #krazek3A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(260, 633, 115, 17))
      #krazek4A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(270, 616, 95, 17))
      #krazek5A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(280, 599, 75, 17))
 
+     if len(clics) != 0:
+         for index_clics in range(len(clics)):
+             if index_clics % 2 == 0:  # dla elementów zagnieżdżonej listy "clics" o indeksach parzystych, reprezentujących pozycję myszy po kliknięciu
+                 klikniecie = "podnies"  # w celu podniesienia klocka z wieży
+                 print("Kliknięcie w pętli 1: ", klikniecie)
+
+                 # wieża1
+                 if 480 < clics[index_clics][1] < 729 and 217 < clics[index_clics][0] < 413:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
+                     z_a = True
+
+                     # wieża2
+                 elif 480 < clics[index_clics][1] < 729 and 528 < clics[index_clics][0] < 728:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
+                     z_b = True
+
+                     # wieża3
+                 elif 480 < clics[index_clics][1] < 729 and 836 < clics[index_clics][0] < 1036:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
+                     z_c = True
+
+             else:  # dla elementów zagnieżdżonej listy "clics" o indeksach nieparzystych, reprezentujących pozycję myszy po kliknięciu
+                 klikniecie = "poloz"  # w celu położenia klocka na wieżę
+                 print("Kliknięcie w pętli 2: ", klikniecie)
+
+                 # wieża1
+                 if 480 < clics[index_clics][1] < 729 and 217 < clics[index_clics][0] < 413:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
+                     na_a = True
+
+                     # wieża2
+                 elif 480 < clics[index_clics][1] < 729 and 528 < clics[index_clics][0] < 728:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
+                     na_b = True
+
+                     # wieża3
+                 elif 480 < clics[index_clics][1] < 729 and 836 < clics[index_clics][0] < 1036:  # sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
+                     na_c = True
+
      #sterowanie
-
-     klikniecia_lewe = []
-     klikniecia_prawe = []
-     klik_lewy = 0
      for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit(0)
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
 
-                # obsługa kursora
-                pozycja_kursora = pygame.mouse.get_pos()
-                #klik_mysz = pygame.mouse.get_pressed()
-                #print(pozycja_kursora)
-                #print(klik_mysz)
+        if event.type == pygame.QUIT:
+            sys.exit(0)
 
-                #kliknięcie lewego przycisku myszy - wybór wieży, z której przenosimy krążek
-                if event.button == 1:
-                #if klik_mysz == (1, 0, 0):
+        if event.type == pygame.MOUSEBUTTONDOWN:
 
-                    klik_lewy+=1
-                    klikniecia_lewe.append(klik_lewy)
-                    print("lewy")
-                    if 480 < pozycja_kursora[1] < 729:  #sprawdzenie czy mysz znajduje się pomiędzy danymi y obejmującymi wysokość wszystkich trzech wież
+            # obsługa kursora
+            pozycja_kursora = pygame.mouse.get_pos()
+            #klik_mysz = pygame.mouse.get_pressed()
+            #print(pozycja_kursora)
+            #print(klik_mysz)
 
-                        #wieża1
-                        if 217 < pozycja_kursora[0] < 413:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
-                              #aktualny krążek to element najmniejszy z listy pA równy długości najmniejszego krążka
-                                    #usunięcie ostatniego elementu z listy pA
+            #kliknięcie lewego przycisku myszy - wybór wieży, z której przenosimy krążek
+            if event.button == 1:
+                clics.append(pozycja_kursora)
+
+            #if klik_mysz == (1, 0, 0):
+
+
+                '''print("lewy")
+                if 480 < pozycja_kursora[1] < 729:  #sprawdzenie czy mysz znajduje się pomiędzy danymi y obejmującymi wysokość wszystkich trzech wież
+
+                    #wieża1
+                    if 217 < pozycja_kursora[0] < 413:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
+                          #aktualny krążek to element najmniejszy z listy pA równy długości najmniejszego krążka
+                                #usunięcie ostatniego elementu z listy pA
+                        print("wieza 1")
+
+
+                        a = True
+                        ruch.append("a")
+                        clics.append(pozycja_kursora)
+                        else:
+                            nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
+
+                    #wieża2
+                    elif 528 < pozycja_kursora[0] < 728:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
+                        print("wieza 2")
+
+                        b = True
+                        ruch.append("b")
+                        clics.append(pozycja_kursora)
+                        else:
+                            nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
+
+                    #wieża3
+                    elif 836 < pozycja_kursora[0] < 1036:  ##sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
+                        print("wieza 3")
+
+                        c = True
+                        ruch.append("c")
+                        clics.append(pozycja_kursora)'''
+
+                            #nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
+
+
+            '''#if klik_mysz == (0, 0, 1):
+            #kliknięcie prawego przycisku myszy - wybór docelowej wieży, na którą przenosimy krążek z poprzednio wybranej wieży
+            if event.button == 3:
+                print("prawy")
+                if 480 < pozycja_kursora[1] < 729:  #sprawdzenie czy mysz znajduje się pomiędzy danymi y obejmującymi wysokość wszystkich trzech wież
+
+                    #wieża1
+                    if 217 < pozycja_kursora[0] < 413:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
+                        dysk = min(pA)
+                        wieza = 1                       #przypisanie do zmiennej "wieża" aktualny nr wieży
+                        if (len(pA) > 0 and dysk < pA[-1]) or pA == []: #sprawdzenie czy jeśli na liście (wieży) są już elementy (krążki) czy aktualnie -
+                                                                        # - przenoszony krążek = "dysk"  jest mniejszy od ostatniego krążka lub czy lista jest pusta
+                            poziom = len(pA) + 1                        #przypisanie zmiennej "poziom", która jest piętrem, na którym ma się znależć krążek wartości o 1 -
+                                                                         # - większej od ilości krążków na docelowej wieży
+                            pA.append(dysk)
+                            ruch.append("a")                                            # dołączenie do listy (wieży) aktualnie przenoszonego elementu (krążka) = "dysku"
                             print("wieza 1")
-                            if len(pA) != 0:
-                                dysk = min(pA)
-                            else:
-                                nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
 
+                    #wieża2
+                    elif 528 < pozycja_kursora[0] < 728:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
+                        dysk = min(pA)
+                        wieza = 2
+                        if (len(pB) > 0 and dysk < pB[-1]) or pB == []:
+                            poziom = len(pB) + 1
 
-
-
-                        #wieża2
-                        elif 528 < pozycja_kursora[0] < 728:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
+                            print("kwadrat")
+                            pA.pop()
+                            pB.append(dysk)
+                            ruch.append("b")
                             print("wieza 2")
-                            if len(pB) != 0:
-                                dysk = min(pB)
-                            else:
-                                nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
 
-                        #wieża3
-                        elif 836 < pozycja_kursora[0] < 1036:  ##sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
-                            print("wieza 3")
-                            if len(pC) != 0:
-                                dysk = min(pC)
-                            else:
-                                nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
+                    #wieża3
+                    elif 836 < pozycja_kursora[0] < 1036:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
+                        dysk = min(pA)
+                        wieza = 3
+                        if (len(pC) > 0 and dysk < pC[-1]) or pC == []:
+                            poziom = len(pC) + 1
+                            pA.pop()
+                            pC.append(dysk)
+                            ruch.append("c")
+                            print("wieza 3")'''
+
+            print(pA, pB, pC)
+            print(ruch)
+            if len(ruch) == 2:
+
+                 wszystkie_ruchy.append(ruch)
+                 del ruch[0:2]
+
+            print(wszystkie_ruchy)
+            print("z_a = ", z_a, " z_b = ", z_b, " z_c = ", z_c)
 
 
-                #if klik_mysz == (0, 0, 1):
-                #kliknięcie prawego przycisku myszy - wybór docelowej wieży, na którą przenosimy krążek z poprzednio wybranej wieży
-                if event.button == 3:
-                    print("prawy")
-                    if 480 < pozycja_kursora[1] < 729:  #sprawdzenie czy mysz znajduje się pomiędzy danymi y obejmującymi wysokość wszystkich trzech wież
+        print("clics: ", clics)
+        #print("Klikniecie: ", klikniecie)
 
-                        #wieża1
-                        if 217 < pozycja_kursora[0] < 413:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 1
-                            dysk = min(pA)
-                            wieza = 1                       #przypisanie do zmiennej "wieża" aktualny nr wieży
-                            if (len(pA) > 0 and dysk < pA[-1]) or pA == []: #sprawdzenie czy jeśli na liście (wieży) są już elementy (krążki) czy aktualnie -
-                                                                            # - przenoszony krążek = "dysk"  jest mniejszy od ostatniego krążka lub czy lista jest pusta
-                                poziom = len(pA) + 1                        #przypisanie zmiennej "poziom", która jest piętrem, na którym ma się znależć krążek wartości o 1 -
-                                                                             # - większej od ilości krążków na docelowej wieży
-                                pA.append(dysk)                             # dołączenie do listy (wieży) aktualnie przenoszonego elementu (krążka) = "dysku"
-                                print("wieza 1")
-
-                        #wieża2
-                        elif 528 < pozycja_kursora[0] < 728:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 2
-                            dysk = min(pA)
-                            wieza = 2
-                            if (len(pB) > 0 and dysk < pB[-1]) or pB == []:
-                                poziom = len(pB) + 1
-
-                                print("kwadrat")
-                                pA.pop()
-                                pB.append(dysk)
-                                print("wieza 2")
-
-                        #wieża3
-                        elif 836 < pozycja_kursora[0] < 1036:  #sprawdzenie czy mysz znajduje się pomiędzy danymi x obejmującymi wieżę 3
-                            dysk = min(pA)
-                            wieza = 3
-                            if (len(pC) > 0 and dysk < pC[-1]) or pC == []:
-                                poziom = len(pC) + 1
-                                pA.pop()
-                                pC.append(dysk)
-
-                                print("wieza 3")
-                print(pA, pB, pC)
-
-            pygame.display.update()
+        pygame.display.update()
 
 
 
   # przypisanie grafiki do określonego miejsca ekranu
      screen.blit(tlo, (0, 0))
-
-
-
-
-
-
-
-
      pygame.display.flip()
      pygame.display.update()
