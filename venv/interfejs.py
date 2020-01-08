@@ -16,19 +16,19 @@ FPS = 60
 WIDTH_TOWER = 20
 HEIGHT_TOWER = 100
 
-# tytuł gry
+#tytuł gry
 
 GAME_TITLE = 'Wieże Hanoi'
 
-# okno głowne
+#okno głowne
 GAME_SURFACE = pygame.display.set_mode((WIDTHsc, HEIGHTsc))
 
-# tytuł
+#tytuł
 pygame.display.set_caption('Wieże Hanoi')
 
 
 
-# stałe dla kolorów
+#stałe dla kolorów
 class Palette:
     def __init__(self):
 
@@ -49,6 +49,19 @@ class Napisy:
         czcionka = pygame.font.SysFont("Arial", rozmiar)
         rend = czcionka.render(tekst, 1, kolor)
         tlo.blit(rend, (x, y))
+
+'''class Przyciski:
+    def dodaj_przycisk(self, ekran, kolor_tla, kolor_tekstu, tekst, x, y, szer, wys):
+        przycisk = pygame.draw.rect(ekran, kolor_tla, pygame.Rect(x, y, szer, wys))
+        nap.napisz(tekst, kolor_tekstu, x, y, 30)
+
+
+class Wyswietl_menu:
+    def wyswietl(self):
+        if aktualny_ekran == "menu":
+            GAME_SURFACE.fill(col.GREEN)
+            screen1 = pygame.display.get_surface()
+            przyc.dodaj_przycisk(screen1, col.BLACK, col.WHITE, "Nowa gra", 300 - WIDTHsc/2, 100, 300, 80)'''
 
 
 #klasa robocza do obliczeń wspołrzędnych lewego górnego rogu krążka na ekranie, przy danym poziomie, długości krążka i danej wieży
@@ -160,8 +173,8 @@ class Ulozenie_planszy(Krazek):
             klocki = pygame.draw.rect(tlo, col.GREY, pygame.Rect(iksy[i], ygreki[i], dlulista[i], self.wys))
 
  #metoda przekładająca krążek z jednej wieży na drugą, przy czym jeśli: skad = 1 -> z wieży 1, skad = 2 -> z wieży 2, skad = 3 -> z wieży ,
- #   analogicznie jeśli: dokad = 1 -> na wieżę 1 itd.
-    # dysk - aktualnie przekładany dysk
+ #analogicznie jeśli: dokad = 1 -> na wieżę 1 itd.
+    #dysk - aktualnie przekładany dysk
 
         """krazek1A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(240, 667, 155, 17))
         krazek2A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(250, 650, 135, 17))
@@ -170,14 +183,24 @@ class Ulozenie_planszy(Krazek):
         krazek5A = pygame.draw.rect(tlo, col.GREY, pygame.Rect(280, 599, 75, 17))"""
 
 
-# obiekt klasy Palette
+#obiekt klasy Palette
 col = Palette()
 
 #obiekt klasy Napisy
 nap = Napisy()
 
+#obiekt klasy Przyciski
+#przyc = Przyciski()
+
+#obiekt klasy Wyswietl_menu
+#menu = Wyswietl_menu()
+
 
 while True:
+
+     #screen1 = pygame.display.get_surface()
+     #aktualny_ekran = "menu"
+     #menu.wyswietl()
 
      #słownik przypisujący do nr klocka jego długość
      dictA = {5:75, 4:95, 3:115, 2:135, 1:155}
@@ -197,13 +220,17 @@ while True:
         #pobieramy informacje o ekranie - tle
      screen = pygame.display.get_surface()
 
-     nap.napisz("Kliknij lewy przycisk myszy nad wieżą, z której chcesz przenieść klocek", col.GREY3, 121, 15, 12)
-     nap.napisz("Kliknij prawy przycisk myszy nad więżą, na którą chcesz przenieść klocek", col.GREY3, 121, 40, 12)
+     nap.napisz("Kliknij lewy przycisk myszy nad wieżą, z której chcesz przenieść klocek", col.GREY3, 141, 15, 12)
+     nap.napisz("Kliknij prawy przycisk myszy nad więżą, na którą chcesz przenieść klocek", col.GREY3, 141, 40, 12)
+     nap.napisz("31", col.WHITE, 590, 30, 72)
+     nap.napisz("Menu główne", col.WHITE, 11, 11, 16)
+
+
 
 
 #narysowanie wież i ich podstaw
      pozycja_kursora = pygame.mouse.get_pos()
-     print(pozycja_kursora)
+     #print(pozycja_kursora)
 
      if 217 < pozycja_kursora[0] < 413 and 480 < pozycja_kursora[1] < 729:
 
@@ -318,7 +345,6 @@ while True:
                             print("wieza 2")
                             if len(pB) != 0:
                                 dysk = min(pB)
-                                pB.pop()
                             else:
                                 nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
 
@@ -327,7 +353,6 @@ while True:
                             print("wieza 3")
                             if len(pC) != 0:
                                 dysk = min(pC)
-                                pC.pop()
                             else:
                                 nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
 
