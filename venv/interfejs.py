@@ -26,6 +26,8 @@ GAME_SURFACE = pygame.display.set_mode((WIDTHsc, HEIGHTsc))
 #tytuł
 pygame.display.set_caption('Wieże Hanoi')
 
+clock = pygame.time.Clock()
+
 #obraz tła - załadowanie obrazu do tła
 tlo = pygame.image.load("nowetlo2.png").convert()
 
@@ -38,6 +40,7 @@ class Palette:
     def __init__(self):
 
         self.GREEN = (160, 161, 97)
+        self.GREEN2 = (62, 70, 37)
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
         self.BROWN = (69, 49, 19)
@@ -62,14 +65,49 @@ class Napisy:
     def zakryj_licznik(self):
         nap.zakryj(col.BLACK, 1040, 29, 200, 50)
 
-#class Obsluga_myszy:
+
+class Menu:
+
+    def text_objects(self, text, font):
+        textSurface = font.render(text, True, col.BLACK)
+        return textSurface, textSurface.get_rect()
+
+    def wyswietl_menu(self):
+
+        intro = True
+
+        while intro:
+            for event in pygame.event.get():
+                print(event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+
+            GAME_SURFACE.fill(col.GREEN2)
+            largeText = pygame.font.Font('freesansbold.ttf', 115)
+            TextSurf, TextRect = mn.text_objects("Towers of Hanoi", largeText)
+            TextRect.center = ((1280/2 - 300), (720/3 - 20))
+            GAME_SURFACE.blit(TextSurf, TextRect)
+            #napis1 = nap.napisz("Nowa gra", col.WHITE, 1280/2 - 300, 720/3 - 20, 20)
+
+            mouse = pygame.mouse.get_pos()
+
+            # print(mouse)
+
+            if 150 + 100 > mouse[0] > 150 and 450 + 50 > mouse[1] > 450:
+                pygame.draw.rect(GAME_SURFACE, col.GREEN, (150, 450, 100, 50))
+                pygame.draw.rect(GAME_SURFACE, col.GREEN, (550, 450, 100, 50))
+            else:
+
+                pygame.draw.rect(GAME_SURFACE, col.BLACK, (150, 450, 100, 50))
+                pygame.draw.rect(GAME_SURFACE, col.BLACK, (550, 450, 100, 50))
+
+            pygame.display.update()
+            clock.tick(15)
 
 class Animacja_obrazu:
 
-
     def wyswietl_poczatkowe(self):
-
-
 
         #napisy
         nap.napisz("Aby wykonać ruch kliknij na wiezę, z której chcesz przenieść klocek, a następnie na wieżę docelową.", col.GREEN, 241, 7, 12)
@@ -101,7 +139,6 @@ class Animacja_obrazu:
               pygame.display.flip()
               pygame.display.update()
 
-
         elif 528 < pozycja_kursora[0] < 728 and 480 < pozycja_kursora[1] < 729:
 
               # podświetlona wieża2
@@ -110,8 +147,6 @@ class Animacja_obrazu:
               podstawa2 = pygame.draw.rect(tlo, kolor_wiezy2, pygame.Rect(600, 670, 55, 10))
               pygame.display.flip()
               pygame.display.update()
-
-
 
         elif 836 < pozycja_kursora[0] < 1036 and 480 < pozycja_kursora[1] < 729:
 
@@ -122,9 +157,7 @@ class Animacja_obrazu:
               pygame.display.flip()
               pygame.display.update()
 
-
         #krążki
-
 
         krazek5 = Narysuj_krazek(col.GREY5, 5, 75, 1)
         krazek4 = Narysuj_krazek(col.GREY4, 4, 95, 1)
@@ -133,13 +166,7 @@ class Animacja_obrazu:
         krazek1 = Narysuj_krazek(col.GREY1, 1, 155, 1)
 
 
-
-
-
     def wyswietl_ruch(self, dlugosc_krazka, poziom, wieza, poziom_st, wieza_st):
-
-
-
 
 
         kolor1 = col.GREY1
@@ -168,44 +195,6 @@ class Animacja_obrazu:
         pygame.display.flip()
         pygame.display.update()
 
-
-
-        '''if ktory_krazek == 75:
-            
-
-         krazek5 = Narysuj_krazek(col.GREY5, poziom, 75, wieza)
-         krazek4 = Narysuj_krazek(col.GREY4, 4, 95, 1)
-         krazek3 = Narysuj_krazek(col.GREY3, 3, 115, 1)
-         krazek2 = Narysuj_krazek(col.GREY2, 2, 135, 1)
-         krazek1 = Narysuj_krazek(col.GREY1, 1, 155, 1)
-
-        elif ktory_krazek == 95:
-          krazek5 = Narysuj_krazek(col.GREY5, 5, 75, wieza)
-          krazek4 = Narysuj_krazek(col.GREY4, 4, 95, 1)
-          krazek3 = Narysuj_krazek(col.GREY3, 3, 115, 1)
-          krazek2 = Narysuj_krazek(col.GREY2, 2, 135, 1)
-          krazek1 = Narysuj_krazek(col.GREY1, 1, 155, 1)
-        elif ktory_krazek == 115:
-          krazek5 = Narysuj_krazek(col.GREY5, poziom, 75, wieza)
-          krazek4 = Narysuj_krazek(col.GREY4, 4, 95, 1)
-          krazek3 = Narysuj_krazek(col.GREY3, 3, 115, 1)
-          krazek2 = Narysuj_krazek(col.GREY2, 2, 135, 1)
-          krazek1 = Narysuj_krazek(col.GREY1, 1, 155, 1)
-        elif ktory_krazek == 135:
-          krazek5 = Narysuj_krazek(col.GREY5, poziom, 75, wieza)
-          krazek4 = Narysuj_krazek(col.GREY4, 4, 95, 1)
-          krazek3 = Narysuj_krazek(col.GREY3, 3, 115, 1)
-          krazek2 = Narysuj_krazek(col.GREY2, 2, 135, 1)
-          krazek1 = Narysuj_krazek(col.GREY1, 1, 155, 1)
-        else:
-          krazek5 = Narysuj_krazek(col.GREY5, poziom, 75, wieza)
-          krazek4 = Narysuj_krazek(col.GREY4, 4, 95, 1)
-          krazek3 = Narysuj_krazek(col.GREY3, 3, 115, 1)
-          krazek2 = Narysuj_krazek(col.GREY2, 2, 135, 1)
-          krazek1 = Narysuj_krazek(col.GREY1, 1, 155, 1)'''
-
-        pygame.display.flip()
-        pygame.display.update()
 
 #klasa robocza do obliczeń wspołrzędnych lewego górnego rogu krążka na ekranie, przy danym poziomie, długości krążka i danej wieży
 class Oblicz_wspolrzedne:
@@ -300,6 +289,10 @@ col = Palette()
 #obiekt klasy Napisy
 nap = Napisy()
 
+mn = Menu()
+
+mn.wyswietl_menu()
+
 #obiekt klasy Animacja_obrazu
 obraz = Animacja_obrazu()
 
@@ -321,12 +314,13 @@ clics = []
 
 #obiekt klasy Animacja_obrazu
 obraz.wyswietl_poczatkowe()
+wygrana = False
+gra = True
 
-while True:
+while gra:
 
      licznik_ruchow = len(przelozenia) - 1
      start_sek = pygame.time.get_ticks() / 1000
-     stop_sek = pygame.time.get_ticks() / 1000
      time_minuty = int(start_sek // 60)
      time_sekund = int(start_sek % 60)
      z_a = False
@@ -349,17 +343,8 @@ while True:
      pygame.display.update()
      zegar = nap.napisz(str(time_minuty)+":"+str(time_sekund), col.WHITE, 240, 29, 50)
 
-
-
-
-
      pygame.display.flip()
      pygame.display.update()
-
-
-
-
-
 
      #sterowanie
      for event in pygame.event.get():
@@ -381,8 +366,6 @@ while True:
 
             if event.button == 1:
                 clics.append(pozycja_kursora)
-
-
 
 
                 if len(clics) != 0:
@@ -473,9 +456,6 @@ while True:
                                 na_c = False
                                 na_a = False
                                 na_b = False
-
-
-
 
 
                         # przełożenia klocka z jednej wieży na drugą w zależności od wartości zmiennych wygenerowanych na podstawie kliknięć gracza
@@ -647,8 +627,19 @@ while True:
                 print("clics: ", clics)
                 print("Przełożenia: ", przelozenia)
                 print("Stan wież Hanoi: ", pA, pB, pC)
+                if pA == pB:
 
-  # przypisanie grafiki do określonego miejsca ekranu
+                    wygrana = True
+                    seconds_survived = (pygame.time.get_ticks() - start_sec) /1000
+                    print("Wygrana!")
+
+
+
+     nap.napisz("Wygrana!", col.WHITE, 180 - 1280/2, 80 - 720/2, 80)
+
+     '''stop_sek = pygame.time.get_ticks() / 1000
+     time_minuty = int(stop_sek // 60)
+     time_sekund = int(stop_sek % 60)'''
 
      pygame.display.flip()
      pygame.display.update()
