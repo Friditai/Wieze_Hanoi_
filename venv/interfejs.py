@@ -1,6 +1,6 @@
 # Gra "Wieże Hanoi" napisana w języku Python 3 z wykorzystaniem biblioteki PyGame
 
-import sys, pygame
+import sys, pygame, time
 
 
 # inicjalizacja modułów
@@ -56,6 +56,12 @@ class Napisy:
         rend = czcionka.render(tekst, 1, kolor)
         tlo.blit(rend, (x, y))
 
+    def zakryj(self, kolor, x, y, szer, wys):
+        kwadrat = pygame.draw.rect(tlo, kolor, pygame.Rect(x, y, szer, wys))
+
+    def zakryj_licznik(self):
+        nap.zakryj(col.BLACK, 1040, 29, 200, 50)
+
 #class Obsluga_myszy:
 
 class Animacja_obrazu:
@@ -66,9 +72,9 @@ class Animacja_obrazu:
 
 
         #napisy
-        nap.napisz("Kliknij lewy przycisk myszy nad wieżą, z której chcesz przenieść klocek,", col.WHITE, 141, 15, 12)
-        nap.napisz("a następnie nad wieżą docelową, aby zrobić ruch ", col.WHITE, 141, 40, 12)
-        nap.napisz("31", col.WHITE, 590, 30, 72)
+        nap.napisz("Aby wykonać ruch kliknij na wiezę, z której chcesz przenieść klocek, a następnie na wieżę docelową.", col.GREEN, 241, 7, 12)
+
+        nap.napisz("31", col.WHITE, 590, 30, 50)
         nap.napisz("Menu główne", col.WHITE, 11, 11, 16)
 
         # narysowanie wież i ich podstaw oraz zmiana ich koloru (podświetlenie) po najechaniu na nie myszką
@@ -77,7 +83,7 @@ class Animacja_obrazu:
         kolor_wiezy2 = col.BROWN
         kolor_wiezy3 = col.BROWN
 
-        # print(pozycja_kursora)
+        print(pozycja_kursora)
 
         wieza1 = pygame.draw.rect(tlo, kolor_wiezy1, pygame.Rect(310, 500, 15, 170))  # wszystkie wieże bez podświetlenia
         podstawa1 = pygame.draw.rect(tlo, kolor_wiezy1, pygame.Rect(290, 670, 55, 10))
@@ -132,7 +138,20 @@ class Animacja_obrazu:
 
     def wyswietl_ruch(self, dlugosc_krazka, poziom, wieza, poziom_st, wieza_st):
 
-        nowy_krazek = Narysuj_krazek(col.GREY5, poziom, dlugosc_krazka, wieza)
+
+
+
+
+        kolor1 = col.GREY1
+        kolor2 = col.GREY2
+        kolor3 = col.GREY3
+        kolor4 = col.GREY4
+        kolor5 = col.GREY5
+
+        jaki_kolor = {75: kolor5, 95: kolor4, 115: kolor3, 135: kolor2, 155: kolor1}
+        kolor = jaki_kolor.get(dlugosc_krazka)
+
+        nowy_krazek = Narysuj_krazek(kolor, poziom, dlugosc_krazka, wieza)
 
         zakrycie = Narysuj_krazek(col.BLACK, poziom_st, dlugosc_krazka, wieza_st)
 
@@ -293,9 +312,11 @@ pC = []
 dysk = min(pA)
 poziom = 1
 wszystkie_ruchy = []
-przelozenia = []
-
+przelozenia = [0]
 clics = []
+
+#czas od startu gry
+
 
 
 #obiekt klasy Animacja_obrazu
@@ -303,6 +324,11 @@ obraz.wyswietl_poczatkowe()
 
 while True:
 
+     licznik_ruchow = len(przelozenia) - 1
+     start_sek = pygame.time.get_ticks() / 1000
+     stop_sek = pygame.time.get_ticks() / 1000
+     time_minuty = int(start_sek // 60)
+     time_sekund = int(start_sek % 60)
      z_a = False
      z_b = False
      z_c = False
@@ -314,6 +340,23 @@ while True:
      #pobieramy informacje o ekranie
      screen = pygame.display.get_surface()
      screen.blit(tlo, (0, 0))
+
+     #wyświetlenie licznika ruchów
+     nap.napisz(str(licznik_ruchow), col.WHITE, 1040, 29, 50)
+
+     zakrycie_zegara = nap.zakryj(col.BLACK, 210, 29, 180, 50)
+     pygame.display.flip()
+     pygame.display.update()
+     zegar = nap.napisz(str(time_minuty)+":"+str(time_sekund), col.WHITE, 240, 29, 50)
+
+
+
+
+
+     pygame.display.flip()
+     pygame.display.update()
+
+
 
 
 
@@ -440,12 +483,19 @@ while True:
 
                             if len(pA)==0:
                              nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
+
                             else:
 
                              print("Przelozenie ab")
-                             przelozenia.append("ab")
+
+
                              dysk = min(pA)
                              if len(pA) > 0 and ((len(pB) > 0 and dysk < pB[-1]) or pB == []):
+
+                                if przelozenia[-1] != "ab":
+                                     nap.zakryj_licznik()
+                                     przelozenia.append("ab")
+
                                 poziom = len(pB) + 1
                                 poziom_stary = len(pA)
                                 pB.append(dysk)
@@ -462,13 +512,20 @@ while True:
 
                             if len(pA)==0:
                              nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
+
                             else:
 
                              print("Przełożenie ac")
-                             przelozenia.append("ac")
+
+
 
                              dysk = min(pA)
                              if len(pA) > 0 and ((len(pC) > 0 and dysk < pC[-1]) or pC == []):
+
+                                if przelozenia[-1] != "ac":
+                                   nap.zakryj_licznik()
+                                   przelozenia.append("ac")
+
                                 poziom = len(pC) + 1
                                 poziom_stary = len(pA)
                                 pC.append(dysk)
@@ -482,12 +539,19 @@ while True:
 
                             if len(pB)==0:
                              nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
+
                             else:
 
                              print("Przelozenie ba")
-                             przelozenia.append("ba")
+
+
                              dysk = min(pB)
                              if len(pB) > 0 and ((len(pA) > 0 and dysk < pA[-1]) or pA == []):
+
+                                if przelozenia[-1] != "ba":
+                                    nap.zakryj_licznik()
+                                    przelozenia.append("ba")
+
                                 poziom = len(pA) + 1
                                 poziom_stary = len(pB)
                                 pA.append(dysk)
@@ -499,13 +563,24 @@ while True:
                         elif z_b == True and na_c == True:
 
                             if len(pB)==0:
-                             nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
+
+                              nap.zakryj(col.BLACK, 577, 694, 80, 12)
+
+                              nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
+
+
                             else:
 
                              print("Przelozenie bc")
-                             przelozenia.append("bc")
+
+
                              dysk = min(pB)
                              if len(pB) > 0 and ((len(pC) > 0 and dysk < pC[-1]) or pC == []):
+
+                                if przelozenia[-1] != "bc":
+                                    nap.zakryj_licznik()
+                                    przelozenia.append("bc")
+
                                 poziom = len(pC) + 1
                                 poziom_stary = len(pB)
                                 pC.append(dysk)
@@ -518,11 +593,19 @@ while True:
 
                             if len(pC)==0:
                              nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
+
+                             nap.zakryj(col.BLACK, 897, 694, 12, 80)
                             else:
                              print("Przelozenie ca")
-                             przelozenia.append("ca")
+
+
                              dysk = min(pC)
                              if len(pC) > 0 and ((len(pA) > 0 and dysk < pA[-1]) or pA == []):
+
+                                if przelozenia[-1] != "ca":
+                                    nap.zakryj_licznik()
+                                    przelozenia.append("ca")
+
                                 poziom = len(pA) + 1
                                 poziom_stary = len(pC)
                                 pA.append(dysk)
@@ -535,12 +618,20 @@ while True:
 
                             if len(pC)==0:
                              nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
+
+                             nap.zakryj(col.BLACK, 897, 694, 12, 80)
                             else:
 
                              print("Przelozenie cb")
-                             przelozenia.append("cb")
+
+
                              dysk = min(pC)
                              if len(pC) > 0 and ((len(pB) > 0 and dysk < pB[-1]) or pB == []):
+
+                                if przelozenia[-1] != "cb":
+                                    nap.zakryj_licznik()
+                                    przelozenia.append("cb")
+
                                 poziom = len(pB) + 1
                                 poziom_stary = len(pC)
                                 pB.append(dysk)
