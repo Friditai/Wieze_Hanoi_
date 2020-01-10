@@ -27,7 +27,9 @@ GAME_SURFACE = pygame.display.set_mode((WIDTHsc, HEIGHTsc))
 pygame.display.set_caption('Wieże Hanoi')
 
 #obraz tła - załadowanie obrazu do tła
-tlo = pygame.image.load("tlo1m.png").convert()
+tlo = pygame.image.load("nowetlo2.png").convert()
+
+
 
 
 
@@ -59,7 +61,7 @@ class Napisy:
 class Animacja_obrazu:
 
 
-    def wyswietl(self, nowy, dlugosc_krazka, poziom, wieza):
+    def wyswietl_poczatkowe(self):
 
 
 
@@ -124,13 +126,28 @@ class Animacja_obrazu:
         krazek2 = Narysuj_krazek(col.GREY2, 2, 135, 1)
         krazek1 = Narysuj_krazek(col.GREY1, 1, 155, 1)
 
-        slownik_krazkow = {155: krazek1, 135: krazek2, 115: krazek3, 95: krazek4, 75: krazek5}
 
-        if nowy == True:
-            nowy_krazek = Narysuj_krazek(col.GREY5, poziom, dlugosc_krazka, wieza)
 
-            stary_krazek = slownik_krazkow.get(dlugosc_krazka)
-            stary_krazek = nowy_krazek
+
+
+    def wyswietl_ruch(self, dlugosc_krazka, poziom, wieza, poziom_st, wieza_st):
+
+        nowy_krazek = Narysuj_krazek(col.GREY5, poziom, dlugosc_krazka, wieza)
+
+        zakrycie = Narysuj_krazek(col.BLACK, poziom_st, dlugosc_krazka, wieza_st)
+
+        if wieza_st == 1:
+            x_naprawy = 310
+        elif wieza_st == 2:
+            x_naprawy = 620
+        else:
+            x_naprawy = 930
+
+        jakipoziom = {1: 667, 2: 650, 3: 633, 4: 616, 5: 599}
+        y_naprawy = jakipoziom.get(poziom_st)
+        naprawa_wiezy = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(x_naprawy, y_naprawy, 15, 17))
+        pygame.display.flip()
+        pygame.display.update()
 
 
 
@@ -281,7 +298,8 @@ przelozenia = []
 clics = []
 
 
-
+#obiekt klasy Animacja_obrazu
+obraz.wyswietl_poczatkowe()
 
 while True:
 
@@ -291,19 +309,13 @@ while True:
      na_a = False
      na_b = False
      na_c = False
+     len(clics) == 2
 
      #pobieramy informacje o ekranie
      screen = pygame.display.get_surface()
      screen.blit(tlo, (0, 0))
-     obraz.wyswietl(False,75, 5, 1)
-     '''
-     listakrazA = [krazek1, krazek2, krazek3, krazek4, krazek5]
-     listakrazB = []
-     listakrazC = []'''
 
 
-
-     #print(przelozenia)
 
 
      #sterowanie
@@ -327,14 +339,24 @@ while True:
             if event.button == 1:
                 clics.append(pozycja_kursora)
 
-                len(clics)==2
+
 
 
                 if len(clics) != 0:
+
+                    if len(clics)==4:
+                        clics[0] = clics[2]
+                        clics[1] = clics[3]
+                        del clics[2:]
+
                     for index_clics in range(len(clics)):
+
+
+
                         if index_clics % 2 == 0:  # dla elementów zagnieżdżonej listy "clics" o indeksach parzystych, reprezentujących pozycję myszy po kliknięciu
                             klikniecie = "podnies"  # w celu podniesienia klocka z wieży
                             print("Kliknięcie w pętli 1: ", klikniecie)
+
 
                             # wieża1
                             if 480 < clics[index_clics][1] < 729 and 217 < clics[index_clics][
@@ -342,6 +364,7 @@ while True:
                                 z_a = True
                                 z_b = False
                                 z_c = False
+
                                 # print("z_a = ", z_a)
 
                                 # wieża2
@@ -350,6 +373,7 @@ while True:
                                 z_b = True
                                 z_a = False
                                 z_c = False
+
                                 # print("z_b = ", z_b)
 
                                 # wieża3
@@ -358,6 +382,7 @@ while True:
                                 z_c = True
                                 z_a = False
                                 z_b = False
+
                                 # print("z_c = ", z_c)
 
                             else:  # pole poza wieżami
@@ -365,9 +390,11 @@ while True:
                                 z_b = False
                                 z_c = False
 
+
                         else:  # dla elementów zagnieżdżonej listy "clics" o indeksach nieparzystych, reprezentujących pozycję myszy po kliknięciu
                             klikniecie = "poloz"  # w celu położenia klocka na wieżę
                             print("Kliknięcie w pętli 2: ", klikniecie)
+
 
                             # wieża1
                             if 480 < clics[index_clics][1] < 729 and 217 < clics[index_clics][
@@ -375,6 +402,8 @@ while True:
                                 na_a = True
                                 na_b = False
                                 na_c = False
+
+
                                 # print("na_a = ", na_a)
 
                                 # wieża2
@@ -383,6 +412,8 @@ while True:
                                 na_b = True
                                 na_a = False
                                 na_c = False
+
+
                                 # print("na_b = ", na_b)
 
                                 # wieża3
@@ -391,6 +422,8 @@ while True:
                                 na_c = True
                                 na_a = False
                                 na_b = False
+
+
                                 # print("na_c = ", na_c)
 
                             else:  # pole poza wieżami
@@ -398,119 +431,131 @@ while True:
                                 na_a = False
                                 na_b = False
 
-                    # przełożenia klocka z jednej wieży na drugą w zależności od wartości zmiennych wygenerowanych na podstawie kliknięć gracza
-                    if z_a == True and na_b == True:
-
-                        if len(pA)==0:
-                         nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
-                        else:
-
-                         print("Przelozenie ab")
-                         przelozenia.append("ab")
-                         dysk = min(pA)
-                         if len(pA) > 0 and ((len(pB) > 0 and dysk < pB[-1]) or pB == []):
-                            poziom = len(pB) + 1
-                            pB.append(dysk)
-                            pA.pop()
-                            wieza = 2
-
-                            obraz.wyswietl(True, dysk, poziom, wieza)
-                            print("poziom: ", poziom)
-
-
-                    elif z_a == True and na_c == True:
-
-                        if len(pA)==0:
-                         nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
-                        else:
-
-                         print("Przełożenie ac")
-                         przelozenia.append("ac")
-
-                         dysk = min(pA)
-                         if len(pA) > 0 and ((len(pC) > 0 and dysk < pC[-1]) or pC == []):
-                            poziom = len(pC) + 1
-                            pC.append(dysk)
-                            pA.pop()
-                            wieza = 3
-                            Narysuj_krazek(col.GREY5, poziom, dysk, wieza)
-
-                    elif z_b == True and na_a == True:
-
-                        if len(pB)==0:
-                         nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
-                        else:
-
-                         print("Przelozenie ba")
-                         przelozenia.append("ba")
-                         dysk = min(pB)
-                         if len(pB) > 0 and ((len(pA) > 0 and dysk < pA[-1]) or pA == []):
-                            poziom = len(pA) + 1
-                            pA.append(dysk)
-                            pB.pop()
-                            wieza = 1
-                            Narysuj_krazek(col.GREY5, poziom, dysk, wieza)
-
-                    elif z_b == True and na_c == True:
-
-                        if len(pB)==0:
-                         nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
-                        else:
-
-                         print("Przelozenie bc")
-                         przelozenia.append("bc")
-                         dysk = min(pB)
-                         if len(pB) > 0 and ((len(pC) > 0 and dysk < pC[-1]) or pC == []):
-                            poziom = len(pC) + 1
-                            pC.append(dysk)
-                            pB.pop()
-                            wieza = 3
-                            Narysuj_krazek(col.GREY5, poziom, dysk, wieza)
-
-                    elif z_c == True and na_a == True:
-
-                        if len(pC)==0:
-                         nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
-                        else:
-                         print("Przelozenie ca")
-                         przelozenia.append("ca")
-                         dysk = min(pC)
-                         if len(pC) > 0 and ((len(pA) > 0 and dysk < pA[-1]) or pA == []):
-                            poziom = len(pA) + 1
-                            pA.append(dysk)
-                            pC.pop()
-                            wieza = 1
-                            Narysuj_krazek(col.GREY5, poziom, dysk, wieza)
-
-                    elif z_c == True and na_b == True:
-
-                        if len(pC)==0:
-                         nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
-                        else:
-
-                         print("Przelozenie cb")
-                         przelozenia.append("cb")
-                         dysk = min(pC)
-                         if len(pC) > 0 and ((len(pB) > 0 and dysk < pB[-1]) or pB == []):
-                            poziom = len(pB) + 1
-                            pB.append(dysk)
-                            pC.pop()
-                            wieza = 2
-                            Narysuj_krazek(col.GREY5, poziom, dysk, wieza)
 
 
 
-            #print(pA, pB, pC)
+
+                        # przełożenia klocka z jednej wieży na drugą w zależności od wartości zmiennych wygenerowanych na podstawie kliknięć gracza
+                        if z_a == True and na_b == True:
+
+                            if len(pA)==0:
+                             nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
+                            else:
+
+                             print("Przelozenie ab")
+                             przelozenia.append("ab")
+                             dysk = min(pA)
+                             if len(pA) > 0 and ((len(pB) > 0 and dysk < pB[-1]) or pB == []):
+                                poziom = len(pB) + 1
+                                poziom_stary = len(pA)
+                                pB.append(dysk)
+                                pA.pop()
+                                wieza = 2
+                                wieza_stara = 1
 
 
+                                obraz.wyswietl_ruch(dysk, poziom, wieza, poziom_stary, wieza_stara)
+                                print("poziom: ", poziom)
 
-            #print("Klikniecie: ", klikniecie)
 
-            #pygame.display.update()
+                        elif z_a == True and na_c == True:
 
-            print("clics: ", clics)
-            print("Przełożenia: ", przelozenia)
-            print("Stan wież Hanoi: ", pA, pB, pC)
+                            if len(pA)==0:
+                             nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
+                            else:
+
+                             print("Przełożenie ac")
+                             przelozenia.append("ac")
+
+                             dysk = min(pA)
+                             if len(pA) > 0 and ((len(pC) > 0 and dysk < pC[-1]) or pC == []):
+                                poziom = len(pC) + 1
+                                poziom_stary = len(pA)
+                                pC.append(dysk)
+                                pA.pop()
+                                wieza = 3
+                                wieza_stara = 1
+                                obraz.wyswietl_ruch(dysk, poziom, wieza, poziom_stary, wieza_stara)
+
+
+                        elif z_b == True and na_a == True:
+
+                            if len(pB)==0:
+                             nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
+                            else:
+
+                             print("Przelozenie ba")
+                             przelozenia.append("ba")
+                             dysk = min(pB)
+                             if len(pB) > 0 and ((len(pA) > 0 and dysk < pA[-1]) or pA == []):
+                                poziom = len(pA) + 1
+                                poziom_stary = len(pB)
+                                pA.append(dysk)
+                                pB.pop()
+                                wieza = 1
+                                wieza_stara = 2
+                                obraz.wyswietl_ruch(dysk, poziom, wieza, poziom_stary, wieza_stara)
+
+                        elif z_b == True and na_c == True:
+
+                            if len(pB)==0:
+                             nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
+                            else:
+
+                             print("Przelozenie bc")
+                             przelozenia.append("bc")
+                             dysk = min(pB)
+                             if len(pB) > 0 and ((len(pC) > 0 and dysk < pC[-1]) or pC == []):
+                                poziom = len(pC) + 1
+                                poziom_stary = len(pB)
+                                pC.append(dysk)
+                                pB.pop()
+                                wieza = 3
+                                wieza_stara = 2
+                                obraz.wyswietl_ruch(dysk, poziom, wieza, poziom_stary, wieza_stara)
+
+                        elif z_c == True and na_a == True:
+
+                            if len(pC)==0:
+                             nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
+                            else:
+                             print("Przelozenie ca")
+                             przelozenia.append("ca")
+                             dysk = min(pC)
+                             if len(pC) > 0 and ((len(pA) > 0 and dysk < pA[-1]) or pA == []):
+                                poziom = len(pA) + 1
+                                poziom_stary = len(pC)
+                                pA.append(dysk)
+                                pC.pop()
+                                wieza = 1
+                                wieza_stara = 3
+                                obraz.wyswietl_ruch(dysk, poziom, wieza, poziom_stary, wieza_stara)
+
+                        elif z_c == True and na_b == True:
+
+                            if len(pC)==0:
+                             nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
+                            else:
+
+                             print("Przelozenie cb")
+                             przelozenia.append("cb")
+                             dysk = min(pC)
+                             if len(pC) > 0 and ((len(pB) > 0 and dysk < pB[-1]) or pB == []):
+                                poziom = len(pB) + 1
+                                poziom_stary = len(pC)
+                                pB.append(dysk)
+                                pC.pop()
+                                wieza = 2
+                                wieza_stara = 3
+                                obraz.wyswietl_ruch(dysk, poziom, wieza, poziom_stary, wieza_stara)
+
+                        na_a = False
+                        na_b = False
+                        na_c = False
+
+                print("clics: ", clics)
+                print("Przełożenia: ", przelozenia)
+                print("Stan wież Hanoi: ", pA, pB, pC)
 
   # przypisanie grafiki do określonego miejsca ekranu
 
