@@ -31,6 +31,9 @@ clock = pygame.time.Clock()
 #obraz tła - załadowanie obrazu do tła
 tlo = pygame.image.load("nowetlo2.png").convert()
 
+muzyka = pygame.mixer.music.load("japansong.mp3")
+pygame.mixer.music.play(-1)
+
 
 
 
@@ -108,6 +111,10 @@ class Menu:
                     quit()
 
             GAME_SURFACE.fill(col.GREEN2)
+            graf = pygame.image.load("rys2.png")
+            graf_dol = pygame.image.load("rys2dol.png")
+            GAME_SURFACE.blit(graf, (5, 5))
+            GAME_SURFACE.blit(graf_dol, (780, 320))
             largeText = pygame.font.Font('freesansbold.ttf', 60)
             TextSurf, TextRect = mn.text_objects("Towers of Hanoi", largeText)
             TextRect.center = ((1280/2), (100))
@@ -300,6 +307,9 @@ def petla_gry():
     gra = True
 
     while gra:
+
+
+
 
          licznik_ruchow = len(przelozenia) - 1
          start_sek = pygame.time.get_ticks() / 1000
@@ -630,7 +640,11 @@ def petla_gry():
          zakrycie_zegara = nap.zakryj(col.BLACK, 210, 29, 180, 50)
          pygame.display.flip()
          pygame.display.update()
-         zegar = nap.napisz(str(stop_minuty) + ":" + str(stop_sekund), col.WHITE, 240, 29, 50)
+         #zegar = nap.napisz(str(stop_minuty) + ":" + str(stop_sekund), col.WHITE, 240, 29, 50)
+         #'{:0>2}'.format(3)
+         zegar = nap.napisz("{:0>2}".format(stop_minuty) + ":" + "{:0>2}".format(stop_sekund), col.WHITE, 240, 29, 50)
+
+
 
          pygame.display.flip()
          pygame.display.update()
