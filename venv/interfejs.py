@@ -6,6 +6,8 @@ import sys, pygame, time
 # inicjalizacja modułów
 
 pygame.init()
+start_czasu = pygame.time.get_ticks()
+
 pygame.mixer.init()
 
 # stałe
@@ -34,9 +36,29 @@ tlo = pygame.image.load("nowetlo2.png").convert()
 muzyka = pygame.mixer.music.load("japansong.mp3")
 pygame.mixer.music.play(-1)
 
+nowy_czas = 0
+
+class Czas:
+    def __init__(self):
+        self.start_czas = 0
+
+    def start(self):
+        self.start_czas = pygame.time.get_ticks()
+
+    def obecny_czas(self):
+        return (pygame.time.get_ticks() - self.start_czas)/1000
 
 
-
+class Wyniki:
+    def zapisz_wynik(self, current_score):
+        plik = open("najlepsze_wyniki.txt", "w+")
+        highscore = plik.read()
+        highscore_in_no = float(highscore)
+        if current_score < highscore_in_no:
+            plik.write(str(current_score))
+            highscore_in_no = current_score
+            # use the highscore_in_no to print the highscore.
+            plik.close()
 
 #stałe dla kolorów
 class Palette:
@@ -54,6 +76,11 @@ class Palette:
         self.GREY1 = (71, 83, 86)
         self.LIGHTBROWN = (190, 110, 60)
         self.LIGHTGREY = (131, 132, 156)
+        self.GREY5LIGHT = (111 + 50, 123 + 50, 126 + 50)
+        self.GREY4LIGHT = (101 + 50, 113 + 50, 116 + 50)
+        self.GREY3LIGHT = (91 + 50, 103 + 50, 106 + 50)
+        self.GREY2LIGHT = (81 + 50, 93 + 50, 96 + 50)
+        self.GREY1LIGHT = (71 + 50, 83 + 50, 86 + 50)
 
 class Napisy:
 
@@ -83,11 +110,16 @@ class Menu:
             pygame.draw.rect(pow, kolor_aktywny, (x, y, szer, wys))
             if click[0] == 1 and dzialanie != None:
                 if dzialanie == "gra":
+                    cz.start()
+                    cz.obecny_czas()
                     petla_gry()
                 elif dzialanie == "wyjscie":
                     pygame.quit()
                     quit()
                 elif dzialanie == "menu":
+
+                    nap.zakryj_licznik()
+                    zakrycie_poprzedniego = nap.zakryj(col.BLACK, 310 - 80, 545, 780, 200)
                     menu_glowne()
                     restart()
 
@@ -127,6 +159,33 @@ class Menu:
             pygame.display.update()
             clock.tick(15)
 
+
+    def wygrana_wyswietl(self):
+
+        wygrana = True
+
+        while wygrana:
+            for event in pygame.event.get():
+                print(event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+
+            GAME_SURFACE.fill(col.GREEN2)
+            graf = pygame.image.load("rys2.png")
+            graf_dol = pygame.image.load("rys2dol.png")
+            GAME_SURFACE.blit(graf, (5, 5))
+            GAME_SURFACE.blit(graf_dol, (780, 320))
+            largeText = pygame.font.Font('freesansbold.ttf', 60)
+            TextSurf, TextRect = mn.text_objects("Gratulacje!", largeText)
+            TextRect.center = ((1280/2), (100))
+            GAME_SURFACE.blit(TextSurf, TextRect)
+
+            mn.przycisk(GAME_SURFACE, "Nowa gra", 490, 400, 300, 50, col.BLACK, col.GREEN, "gra")
+            mn.przycisk(GAME_SURFACE, "Wyjście", 490, 500, 300, 50, col.BLACK, col.GREEN, "wyjscie")
+
+            pygame.display.update()
+            clock.tick(15)
     def restart(self):
         gra = False
         licznik_ruchow = 0
@@ -138,7 +197,7 @@ class Animacja_obrazu:
     def wyswietl_poczatkowe(self):
 
         #napisy
-        nap.napisz("Aby wykonać ruch kliknij na wiezę, z której chcesz przenieść klocek, a następnie na wieżę docelową.", col.GREEN, 241, 7, 12)
+        nap.napisz("Aby wykonać ruch kliknij na wieżę, z której chcesz przenieść klocek, a następnie na wieżę docelową.", col.GREEN, 241, 7, 12)
 
         nap.napisz("31", col.WHITE, 590, 30, 50)
 
@@ -269,7 +328,9 @@ class Narysuj_krazek():
      krazek = klasa_wspolrzedne.rysuj(kolor)
 
 
+cz = Czas()
 
+wyn = Wyniki()
 
 #obiekt klasy Palette
 col = Palette()
@@ -297,10 +358,6 @@ def petla_gry():
     przelozenia = [0]
     clics = []
 
-    #czas od startu gry
-
-
-
     #obiekt klasy Animacja_obrazu
     obraz.wyswietl_poczatkowe()
     wygrana = False
@@ -310,9 +367,11 @@ def petla_gry():
 
 
 
-
+         #zliczanie ruchów gracza
          licznik_ruchow = len(przelozenia) - 1
-         start_sek = pygame.time.get_ticks() / 1000
+
+         #czas od startu gry
+         start_sek = cz.obecny_czas()
          time_minuty = int(start_sek // 60)
          time_sekund = int(start_sek % 60)
          z_a = False
@@ -333,7 +392,8 @@ def petla_gry():
          zakrycie_zegara = nap.zakryj(col.BLACK, 210, 29, 180, 50)
          pygame.display.flip()
          pygame.display.update()
-         zegar = nap.napisz(str(time_minuty)+":"+str(time_sekund), col.WHITE, 240, 29, 50)
+
+         zegar = nap.napisz("{:0>2}".format(time_minuty) + ":" + "{:0>2}".format(time_sekund), col.WHITE, 240, 29, 50)
 
          mn.przycisk(tlo, "Menu", 15, 11, 60, 20, col.BLACK, col.GREEN, "menu")
 
@@ -379,6 +439,24 @@ def petla_gry():
                                 klikniecie = "podnies"  # w celu podniesienia klocka z wieży
                                 print("Kliknięcie w pętli 1: ", klikniecie)
 
+                                kolor1 = col.GREY1
+                                kolor2 = col.GREY2
+                                kolor3 = col.GREY3
+                                kolor4 = col.GREY4
+                                kolor5 = col.GREY5
+
+                                kolor1l = col.GREY1LIGHT
+                                kolor2l = col.GREY2LIGHT
+                                kolor3l = col.GREY3LIGHT
+                                kolor4l = col.GREY4LIGHT
+                                kolor5l = col.GREY5LIGHT
+
+                                jaki_kolor = {75: kolor5, 95: kolor4, 115: kolor3, 135: kolor2, 155: kolor1}
+
+
+                                jaki_kolorLIGHT = {75: kolor5l, 95: kolor4l, 115: kolor3l, 135: kolor2l, 155: kolor1l}
+
+
 
                                 # wieża1
                                 if 480 < clics[index_clics][1] < 729 and 217 < clics[index_clics][
@@ -386,6 +464,34 @@ def petla_gry():
                                     z_a = True
                                     z_b = False
                                     z_c = False
+
+                                    if len(pA)>0:
+                                      poz1 = len(pA)
+                                      dl1 = min(pA)
+                                      w1 = 1
+                                      kolor1l = jaki_kolorLIGHT.get(dl1)
+                                      Narysuj_krazek(kolor1l, poz1, dl1, w1)
+
+                                    if len(pB)>0:
+                                      poz2 = len(pB)
+                                      dl2 = min(pB)
+                                      w2 = 2
+                                      kolor2w = jaki_kolor.get(dl2)
+                                      Narysuj_krazek(kolor2w, poz2, dl2, w2)
+
+
+                                    if len(pC)>0:
+                                      poz3 = len(pC)
+                                      dl3 = min(pC)
+                                      w3 = 3
+                                      kolor3w = jaki_kolor.get(dl3)
+                                      Narysuj_krazek(kolor3w, poz3, dl3, w3)
+
+
+
+
+
+
 
                                     # print("z_a = ", z_a)
 
@@ -396,6 +502,33 @@ def petla_gry():
                                     z_a = False
                                     z_c = False
 
+                                    if len(pB) > 0:
+                                      poz2 = len(pB)
+                                      dl2 = min(pB)
+                                      w2 = 2
+                                      kolor2l = jaki_kolorLIGHT.get(dl2)
+                                      Narysuj_krazek(kolor2l, poz2, dl2, w2)
+
+                                    if len(pC) > 0:
+                                        poz3 = len(pC)
+                                        dl3 = min(pC)
+                                        w3 = 3
+                                        kolor3w = jaki_kolor.get(dl3)
+                                        Narysuj_krazek(kolor3w, poz3, dl3, w3)
+
+                                    if len(pA) > 0:
+                                      poz1 = len(pA)
+                                      dl1 = min(pA)
+                                      w1 = 1
+                                      kolor1w = jaki_kolor.get(dl1)
+                                      Narysuj_krazek(kolor1w, poz1, dl1, w1)
+
+
+
+
+
+
+
                                     # print("z_b = ", z_b)
 
                                     # wieża3
@@ -405,12 +538,67 @@ def petla_gry():
                                     z_a = False
                                     z_b = False
 
+                                    if len(pC) > 0:
+                                      poz3 = len(pC)
+                                      dl3 = min(pC)
+                                      w3 = 3
+                                      kolor3l = jaki_kolorLIGHT.get(dl3)
+                                      Narysuj_krazek(kolor3l, poz3, dl3, w3)
+
+                                    if len(pB) > 0:
+                                      poz2 = len(pB)
+                                      dl2 = min(pB)
+                                      w2 = 2
+                                      kolor2w = jaki_kolor.get(dl2)
+                                      Narysuj_krazek(kolor2w, poz2, dl2, w2)
+
+                                    if len(pA) > 0:
+                                      poz1 = len(pA)
+                                      dl1 = min(pA)
+                                      w1 = 1
+                                      kolor1w = jaki_kolor.get(dl1)
+                                      Narysuj_krazek(kolor1w, poz1, dl1, w1)
+
+
+
+
+
+
+
+
                                     # print("z_c = ", z_c)
 
                                 else:  # pole poza wieżami
                                     z_a = False
                                     z_b = False
                                     z_c = False
+
+                                    if len(pC) > 0:
+                                      poz3 = len(pC)
+                                      dl3 = min(pC)
+                                      w3 = 3
+                                      kolor3w = jaki_kolor.get(dl3)
+                                      Narysuj_krazek(kolor3w, poz3, dl3, w3)
+
+                                    if len(pB) > 0:
+                                      poz2 = len(pB)
+                                      dl2 = min(pB)
+                                      w2 = 2
+                                      kolor2w = jaki_kolor.get(dl2)
+                                      Narysuj_krazek(kolor2w, poz2, dl2, w2)
+
+                                    if len(pA) > 0:
+                                      poz1 = len(pA)
+                                      dl1 = min(pA)
+                                      w1 = 1
+                                      kolor1w = jaki_kolor.get(dl1)
+                                      Narysuj_krazek(kolor1w, poz1, dl1, w1)
+
+
+
+
+
+
 
 
                             else:  # dla elementów zagnieżdżonej listy "clics" o indeksach nieparzystych, reprezentujących pozycję myszy po kliknięciu
@@ -458,7 +646,11 @@ def petla_gry():
                             if z_a == True and na_b == True:
 
                                 if len(pA)==0:
+
                                  nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
+
+                                 nap.zakryj(col.BLACK, 258, 694, 160, 15)
+
 
                                 else:
 
@@ -489,6 +681,8 @@ def petla_gry():
                                 if len(pA)==0:
                                  nap.napisz("Tu nie ma krążków!", col.WHITE, 258, 694, 12)
 
+                                 nap.zakryj(col.BLACK, 258, 694, 160, 15)
+
                                 else:
 
                                  print("Przełożenie ac")
@@ -514,7 +708,17 @@ def petla_gry():
                             elif z_b == True and na_a == True:
 
                                 if len(pB)==0:
+
+
+
                                  nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
+
+
+                                 nap.zakryj(col.BLACK, 577, 694, 160, 15)
+
+
+
+
 
                                 else:
 
@@ -540,9 +744,10 @@ def petla_gry():
 
                                 if len(pB)==0:
 
-                                  nap.zakryj(col.BLACK, 577, 694, 80, 12)
+
 
                                   nap.napisz("Tu nie ma krążków!", col.WHITE, 577, 694, 12)
+                                  nap.zakryj(col.BLACK, 577, 694, 160, 15)
 
 
                                 else:
@@ -570,7 +775,7 @@ def petla_gry():
                                 if len(pC)==0:
                                  nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
 
-                                 nap.zakryj(col.BLACK, 897, 694, 12, 80)
+                                 nap.zakryj(col.BLACK, 897, 694, 160, 15)
                                 else:
                                  print("Przelozenie ca")
 
@@ -595,7 +800,7 @@ def petla_gry():
                                 if len(pC)==0:
                                  nap.napisz("Tu nie ma krążków!", col.WHITE, 897, 694, 12)
 
-                                 nap.zakryj(col.BLACK, 897, 694, 12, 80)
+                                 nap.zakryj(col.BLACK, 897, 694, 160, 15)
                                 else:
 
                                  print("Przelozenie cb")
@@ -626,23 +831,17 @@ def petla_gry():
                     if pA == pB:
 
                         wygrana = True
-                        seconds_survived = (pygame.time.get_ticks() - start_sec) /1000
                         print("Wygrana!")
+                        ekran_wygranej()
 
 
 
          nap.napisz("Wygrana!", col.WHITE, 180 - 1280/2, 80 - 720/2, 80)
 
-         stop_sek = pygame.time.get_ticks() / 1000
-         stop_minuty = int(stop_sek // 60)
-         stop_sekund = int(stop_sek % 60)
 
-         zakrycie_zegara = nap.zakryj(col.BLACK, 210, 29, 180, 50)
          pygame.display.flip()
          pygame.display.update()
-         #zegar = nap.napisz(str(stop_minuty) + ":" + str(stop_sekund), col.WHITE, 240, 29, 50)
-         #'{:0>2}'.format(3)
-         zegar = nap.napisz("{:0>2}".format(stop_minuty) + ":" + "{:0>2}".format(stop_sekund), col.WHITE, 240, 29, 50)
+
 
 
 
@@ -651,6 +850,10 @@ def petla_gry():
 
 def menu_glowne():
      mn.wyswietl_menu()
+
+def ekran_wygranej():
+    mn.wygrana_wyswietl()
+
 
 menu_glowne()
 petla_gry()
