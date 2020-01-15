@@ -110,6 +110,8 @@ class Menu:
             pygame.draw.rect(pow, kolor_aktywny, (x, y, szer, wys))
             if click[0] == 1 and dzialanie != None:
                 if dzialanie == "gra":
+                    nap.zakryj_licznik()
+                    zakrycie_poprzedniego = nap.zakryj(col.BLACK, 310 - 80, 545, 790, 200)
                     cz.start()
                     cz.obecny_czas()
                     petla_gry()
@@ -119,7 +121,7 @@ class Menu:
                 elif dzialanie == "menu":
 
                     nap.zakryj_licznik()
-                    zakrycie_poprzedniego = nap.zakryj(col.BLACK, 310 - 80, 545, 780, 200)
+                    zakrycie_poprzedniego = nap.zakryj(col.BLACK, 310 - 80, 545, 790, 200)
                     menu_glowne()
                     restart()
 
@@ -271,6 +273,7 @@ class Animacja_obrazu:
 
         if wieza_st == 1:
             x_naprawy = 310
+
         elif wieza_st == 2:
             x_naprawy = 620
         else:
@@ -279,6 +282,21 @@ class Animacja_obrazu:
         jakipoziom = {1: 667, 2: 650, 3: 633, 4: 616, 5: 599}
         y_naprawy = jakipoziom.get(poziom_st)
         naprawa_wiezy = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(x_naprawy, y_naprawy, 15, 17))
+
+        if poziom_st == 1:
+            if wieza_st == 1:
+                naprawa_podstawy = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(290, 670, 55, 10))
+                naprawa_dol = pygame.draw.rect(tlo, col.BLACK, pygame.Rect(310, 680, 15, 7))
+
+            elif wieza_st == 2:
+                naprawa_podstawy = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(600, 670, 55, 10))
+                naprawa_dol = pygame.draw.rect(tlo, col.BLACK, pygame.Rect(620, 680, 15, 7))
+
+            else:
+                naprawa_podstawy = pygame.draw.rect(tlo, col.BROWN, pygame.Rect(910, 670, 55, 10))
+                naprawa_dol = pygame.draw.rect(tlo, col.BLACK, pygame.Rect(930, 680, 15, 7))
+
+
         pygame.display.flip()
         pygame.display.update()
 
